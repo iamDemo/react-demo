@@ -12,8 +12,12 @@ export function fetchWeather(city){
   const url = `${API_URL}&q=${city},us`;
   const request = axios.get(url);
 
+  // request here is a Promise
+  console.log("Action -> Generates request", request);
+
   // request is a promise, when the real data is returned, then this action will be done and the real data will be put into payload
   // reducer will execute its own logic once promise is done
+  // middleware: lets action pass, or manipulates it, or logs it, or stops it
   return {
     type: FETCH_WEATHER,
     payload: request

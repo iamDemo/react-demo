@@ -9,7 +9,8 @@ export default function(state = [], action) {
 
       // reducer should always return a new state (do not modify original state and return it)
       // promise.data is the real data
-      return [action.payload.data, ...state];
+      // return state.concat([action.payload.data]);
+      return [action.payload.data, ...state]; // this will generate a new array which the new element will be the first one
   }
 
   return state;
