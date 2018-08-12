@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 
 import {fetchPosts} from '../../actions/index'
 
 class Index extends Component {
   // componentWillMount will only be called once (will not be called for re-rendering)
   componentWillMount() {
+    console.log('Index loads all posts');
+
     // TODO if the page is jumped back, will this be called?
     this.props.fetchPosts();
   }
@@ -16,8 +19,10 @@ class Index extends Component {
     return this.props.posts.map((post) => {
         return (
           <li className='list-group-item' key={post.id}>
-            <span className='pull-xs-right'>{post.categories}</span>
-            <strong>{post.title}</strong>
+            <Link to={`posts/${post.id}`}>
+              <span className='pull-xs-right'>{post.categories}</span>
+              <strong>{post.title}</strong>
+            </Link>
           </li>
         );
       }

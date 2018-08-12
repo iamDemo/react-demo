@@ -6,8 +6,8 @@ import PostsIndex from './components/posts/index'
 import PostsShow from './components/posts/show'
 
 export default (
-  <Route path="/" component={App}>
+  <Route path='/' component={App}>
     <IndexRoute component={PostsIndex}/>
-    <Route path="posts/:id" component={PostsShow}/>
+    <Route path='posts/:id' component={PostsShow}/>
   </Route>
 );
