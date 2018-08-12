@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {fetchPosts} from '../actions/index'
+import {fetchPosts} from '../../actions/index'
 
-class PostsIndex extends Component {
+class Index extends Component {
   // componentWillMount will only be called once (will not be called for re-rendering)
   componentWillMount() {
     // TODO if the page is jumped back, will this be called?
@@ -11,7 +11,7 @@ class PostsIndex extends Component {
   }
 
   renderPosts() {
-    console.log('PostsIndex posts', this.props.posts);
+    console.log('Index posts', this.props.posts);
 
     return this.props.posts.map((post) => {
         return (
@@ -46,4 +46,4 @@ function matchStateToProps(state) {
 // }
 
 // use {fetchPosts} as mapDispatchToPros when key and value are using the same string
-export default connect(matchStateToProps, {fetchPosts})(PostsIndex);
+export default connect(matchStateToProps, {fetchPosts})(Index);
