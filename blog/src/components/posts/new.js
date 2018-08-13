@@ -9,10 +9,18 @@ class New extends Component {
   //
   //   this.onSubmit = this.onSubmit.bind(this)
   // }
+
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
   onSubmit(formValues) {
     console.log('New: onSubmit receives -> ', formValues);
 
     this.props.createPost(formValues)
+      .then( () => {
+        this.context.router.push('/');
+      });
   }
 
   render() {

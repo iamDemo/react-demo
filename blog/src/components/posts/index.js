@@ -5,11 +5,10 @@ import {Link} from 'react-router';
 import {fetchPosts} from '../../actions/index'
 
 class Index extends Component {
-  // componentWillMount will only be called once (will not be called for re-rendering)
+  // this lifecycle method will be called whenever this component is about to render. It won't be called when one part of this component is re-rendered.
   componentWillMount() {
     console.log('Index loads all posts');
 
-    // TODO if the page is jumped back, will this be called?
     this.props.fetchPosts();
   }
 
@@ -32,6 +31,11 @@ class Index extends Component {
   render() {
     return (
       <div>
+        <div className='text-xs-right'>
+          <Link to='/posts/new' className='btn btn-primary'>
+            Add a Post
+          </Link>
+        </div>
         <h3>Posts</h3>
         <ul className='list-group'>
           {this.renderPosts()}
