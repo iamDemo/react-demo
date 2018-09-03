@@ -1,12 +1,14 @@
+import _ from "lodash";
+
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import {Link} from "react-router-dom";
 
 import {fetchPosts} from '../../actions/index'
 
 class Index extends Component {
   // this lifecycle method will be called whenever this component is about to render. It won't be called when one part of this component is re-rendered.
-  componentWillMount() {
+  componentDidMount() {
     console.log('Index loads all posts');
 
     this.props.fetchPosts();
@@ -15,17 +17,16 @@ class Index extends Component {
   renderPosts() {
     console.log('Index posts', this.props.posts);
 
-    return this.props.posts.map((post) => {
-        return (
-          <li className='list-group-item' key={post.id}>
-            <Link to={`posts/${post.id}`}>
-              <span className='pull-xs-right'>{post.categories}</span>
-              <strong>{post.title}</strong>
-            </Link>
-          </li>
-        );
-      }
-    );
+    return _.map(this.props.posts, post => {
+      return (
+        <li className='list-group-item' key={post.id}>
+          <Link to={`posts/${post.id}`}>
+            <span className='pull-xs-right'>{post.categories}</span>
+            <strong>{post.title}</strong>
+          </Link>
+        </li>
+      )
+    });
   }
 
   render() {
@@ -46,7 +47,7 @@ class Index extends Component {
 }
 
 function matchStateToProps(state) {
-  return {posts: state.posts.all}
+  return {posts: state.posts}
 }
 
 // import {bindActionCreators} from "redux";

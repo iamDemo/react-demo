@@ -1,6 +1,7 @@
-import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
-import {reduxForm} from "redux-form";
+import React, {Component} from 'react';
+import {Link} from "react-router-dom";
+import {Field, reduxForm} from "redux-form";
+import {connect} from "react-redux";
 import {createPost} from "../../actions";
 
 class New extends Component {
@@ -10,59 +11,59 @@ class New extends Component {
   //   this.onSubmit = this.onSubmit.bind(this)
   // }
 
-  static contextTypes = {
-    router: PropTypes.object
-  };
+  renderField(field) {
+    console.log('New: render field', field);
+
+    const {meta: {touched, error}} = field;
+    const className = `form-group ${touched && error ? "has-danger" : ""}`;
+
+    return (
+      <div className={className}>
+        <label>{field.label}</label>
+        {/* title is enriched by react-form, extract stuffs are put here like onChange=blah, name='title' by using ...field.input */}
+        <input className="form-control" type="text" {...field.input} />
+        <div className="text-help"> {touched ? error : ""}</div>
+      </div>
+    )
+  }
 
   onSubmit(formValues) {
     console.log('New: onSubmit receives -> ', formValues);
 
-    this.props.createPost(formValues)
-      .then( () => {
-        this.context.router.push('/');
-      });
+    this.props.createPost(formValues, () => {
+      this.props.history.push("/")
+    });
   }
 
   render() {
-    const {fields: {title, categories, content}, handleSubmit} = this.props;
+    // handleSubmit from react form
+    const {handleSubmit} = this.props;
 
     // title, categories, content are enriched by react-form, and they have extra stuff
     // every time, title is changed, the render() will be called since onChange() method is defined in title which {...title} is added later
     console.log('New: retrieves props', this.props);
-    console.log('New: retrieves title ->', title);
     console.log('New: retrieves handleSubmit ->', handleSubmit);
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-        <h3>Create a Post</h3>
+        <Field
+          label='Title'
+          name='title'
+          component={this.renderField}
+        />
 
-        <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
-          <label>Title</label>
-          {/* title is enriched by react-form, extract stuffs are put here like onChange=blah */}
-          <input type='text' className='form-control'  {...title} />
-          <div className="text-help">
-            {title.touched ? title.error : ''}
-          </div>
-        </div>
+        <Field
+          label='Categories'
+          name='categories'
+          component={this.renderField}
+        />
 
-        <div className={`form-group ${categories.touched && categories.invalid ? 'has-danger' : ''}`}>
-          <label>Categories</label>
-          <input type='text' className='form-control'  {...categories} />
-          <div className="text-help">
-            {categories.touched ? categories.error : ''}
-          </div>
-        </div>
-
-        <div className={`form-group ${content.touched && content.invalid ? 'has-danger' : ''}`}>
-          <label>Content</label>
-          <textarea type='text' className='form-control'  {...content} />
-          <div className="text-help">
-            {content.touched ? content.error : ''}
-          </div>
-        </div>
-
+        <Field
+          label='Content'
+          name='content'
+          component={this.renderField}
+        />
         <button type='submit' className='btn btn-primary'>Submit</button>
-
         <Link to='/' className='btn btn-danger'>Cancel</Link>
       </form>
     );
@@ -70,6 +71,8 @@ class New extends Component {
 }
 
 function validate(formValues) {
+  console.log('New: receives form values', formValues);
+
   const errors = {};
 
   if (!formValues.title) {
@@ -89,8 +92,4 @@ function validate(formValues) {
 
 // react-form will dispatch the date to its owner reducer (declared in reducers/index.js) via its own action
 // then those fields will be put in props, so in the component, this.props.fields.blah can be accessed
-export default reduxForm(
-  {form: 'PostsNewForm', fields: ['title', 'categories', 'content'], validate},
-  null,
-  {createPost}
-)(New);
+export default reduxForm({validate, form: 'PostsNewForm'})(connect(null, {createPost})(New));

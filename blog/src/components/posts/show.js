@@ -1,25 +1,24 @@
-import React, {Component, PropTypes} from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {Link} from "react-router-dom";
 
-import {fetchPost, deletePost} from "../../actions/index";
+import {deletePost, fetchPost} from "../../actions/index";
 
 class Show extends Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
+  componentDidMount() {
+    const {id} = this.props.match.params;
 
-  componentWillMount() {
-    console.log('Show fetches a single post', this.props.params.id);
+    console.log('Show: fetch a single post', id);
 
-    this.props.fetchPost(this.props.params.id);
+    this.props.fetchPost(id);
   }
 
   onDeleteClick() {
-    this.props.deletePost(this.props.params.id)
-      .then( () => {
-        this.context.router.push('/');
-      });
+    const {id} = this.props.match.params;
+
+    this.props.deletePost(id, () => {
+      this.props.history.push('/')
+    });
   }
 
   render() {
@@ -51,8 +50,11 @@ class Show extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {post: state.posts.post}
+function mapStateToProps({posts}, ownProps) {
+  // this.props is not accessible here
+  // {posts} ==> const posts = state.posts
+  // convert the big posts to a single one here
+  return {post: posts[ownProps.match.params.id]};
 }
 
 export default connect(mapStateToProps, {fetchPost, deletePost})(Show)
